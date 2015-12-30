@@ -2,5 +2,8 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-cli-furnace-component-keywords'
+  name: 'furnace-component-keywords',
+  isDevelopingAddon: function() {
+	  return true;
+  }
 };

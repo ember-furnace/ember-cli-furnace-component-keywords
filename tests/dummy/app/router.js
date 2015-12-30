@@ -6,6 +6,13 @@ var Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+	this.route('helper');
+	this.route('static');
+	this.route('dynamic');
+	this.route('inheritance');
+	this.route('each');
+	this.route('each-dynamic');
 });
 
 export default Router;
+

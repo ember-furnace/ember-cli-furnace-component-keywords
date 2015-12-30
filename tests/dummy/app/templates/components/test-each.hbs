@@ -1,0 +1,8 @@
+<h2>test-each - keyword - inherited keyword / local keyword / classic</h2>
+{{eachTest templateParam templateHash=templateHash layoutName='test-each-component'}}
+<h2>test-each - each - inherited keyword / 
+classic</h2>
+{{#each models as |model index|}}
+	{{staticTest templateParam templateHash=templateHash}}
+	{{test-child templateParam templateHash=templateHash model=model index=index}}
+{{/each}}
