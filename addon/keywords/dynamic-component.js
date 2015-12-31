@@ -14,7 +14,8 @@ function readHash(env,scope,hash,unboundHash,key) {
 		if(scope.locals[unboundHash[key].key]!==undefined) { 
 			return env.hooks.getValue(scope.locals[unboundHash[key].key]);
 		} else {
-			return scope.component.get(unboundHash[key].key);
+			let component=scope.component || scope._component;
+			return component.get(unboundHash[key].key);
 		}
 	}
 	return undefined;
@@ -25,7 +26,8 @@ function readParam(env,scope,params,unboundParams,index) {
 		return env.hooks.getValue(params[index]);
 	}
 	if(unboundParams[index]!==undefined && unboundParams[index]!==null) {
-		return scope.component.get(unboundParams[index].key);
+		let component=scope.component || scope._component;
+		return component.get(unboundParams[index].key);
 	}
 	return undefined;
 }
@@ -99,10 +101,20 @@ DynamicKeyword.prototype.setupState = function(lastState, env, scope, params, ha
 };
 
 DynamicKeyword.prototype.render = function(morph, env, scope, params, hash, template, inverse, visitor) {
-	if (morph.state.manager) {
-		morph.state.manager.destroy();
-    }	
-	morph.state.manager = null;
+	let state;
+	if(morph.getState) {
+		state = morph.getState();
+		if (state.manager) {
+			state.manager.destroy();
+		}
+		state.manager = null;
+	} else {
+		state=morph.state;
+		if (morph.state.manager) {
+			morph.state.manager.destroy();
+	    }	
+		morph.state.manager = null;
+	}
 	
 	if(morph.linkedParams) {
 		params=morph.linkedParams.params;
@@ -115,7 +127,7 @@ DynamicKeyword.prototype.render = function(morph, env, scope, params, hash, temp
 		updateBinding(bindings,morph, env, scope, null, params, hash, visitor);
 	}
 	
-	var componentPath=morph.state.componentPath;
+	var componentPath=state.componentPath;
 	
 	if(typeof componentPath==='string') {
 		env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);		
@@ -129,8 +141,14 @@ DynamicKeyword.prototype.render = function(morph, env, scope, params, hash, temp
 	
 };
 	
-DynamicKeyword.prototype.rerender = function(morph, env, scope, params, hash, template, inverse, visitor) {		
-	var componentPath=morph.state.componentPath;
+DynamicKeyword.prototype.rerender = function(morph, env, scope, params, hash, template, inverse, visitor) {
+	let state;
+	if(morph.getState) {
+		state = morph.getState();
+	} else {
+		state=morph.state;
+	}
+	var componentPath=state.componentPath;
 	if(typeof componentPath==='string') {
 		env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);		
 		return;

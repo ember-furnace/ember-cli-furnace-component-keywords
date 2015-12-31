@@ -1,4 +1,4 @@
-import {htmlBarsSubscribe,htmlBarsLinkParams,BasicStream,isStream} from 'furnace-component-keywords/private-api';
+import {htmlBarsSubscribe,htmlBarsLinkParams,htmlBarsAcceptParams,BasicStream,isStream} from 'furnace-component-keywords/private-api';
 
 function createStreamBinding(component,key) {
 	var stream=new BasicStream(function(){
@@ -72,9 +72,10 @@ Binding.prototype=new ComponentBinding();
 Binding.prototype.bind=function(morph,env,scope,visitor) {
 	var stream;
 	if(visitor) {
-		stream=visitor.acceptExpression(['get',this.key],env,scope).value;
+		stream=htmlBarsAcceptParams([['get',this.key]],env,scope)[0];
 	} else {
-		stream=createStreamBinding(scope.component,this.key);					
+		let component=scope.component || scope._component;
+		stream=createStreamBinding(component,this.key);					
 	}
 	if(morph && morph.linkedParams) {
 		htmlBarsSubscribe(morph, env, scope, stream);
@@ -94,9 +95,10 @@ MutBinding.prototype=new ComponentBinding();
 MutBinding.prototype.bind=function(morph,env,scope,visitor) {
 	var stream;
 	if(visitor) {
-		stream=visitor.acceptExpression(['subexpr','@mut',[['get',this.key]],[]],env,scope).value;
+		stream=htmlBarsAcceptParams([['subexpr','@mut',[['get',this.key]],[]]],env,scope)[0];
 	} else {
-		stream=createStreamBinding(scope.component,this.key);					
+		let component=scope.component || scope._component;
+		stream=createStreamBinding(component,this.key);							
 	}
 	if(morph && morph.linkedParams) {
 		htmlBarsSubscribe(morph, env, scope, stream);
