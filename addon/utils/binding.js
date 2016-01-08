@@ -1,5 +1,5 @@
 import {htmlBarsSubscribe,htmlBarsLinkParams,htmlBarsAcceptParams,BasicStream,isStream} from 'furnace-component-keywords/private-api';
-
+import Ember from 'ember';
 function createStreamBinding(component,key) {
 	var stream=new BasicStream(function(){
 		return component.get(key);
@@ -34,7 +34,7 @@ function updateBinding(bindings, morph, env, scope, path, params, hash, visitor)
 			let key = updates[i];			
 			if(hash[key]===undefined) {
 				hash[key]=bindings.hash[key].bind(morph,env,scope,visitor);
-				if(isStream(params[i])) {
+				if(isStream(hash[key])) {
 					streams.push(hash[key]);
 				}
 			}
@@ -45,7 +45,6 @@ function updateBinding(bindings, morph, env, scope, path, params, hash, visitor)
 		// Updated linkedParams
 		if(!morph.linkedParams && streams.length>0) {
 			htmlBarsLinkParams(env, scope, morph, '@furnace-keyword', params, hash);
-			
 		} 
 		morph.linkedParams = { params: params, hash: hash };
 	}	
@@ -71,8 +70,9 @@ function Binding(key) {
 Binding.prototype=new ComponentBinding();
 Binding.prototype.bind=function(morph,env,scope,visitor) {
 	var stream;
+	let fn= visitor && visitor.acceptParams || htmlBarsAcceptParams;
 	if(visitor) {
-		stream=htmlBarsAcceptParams([['get',this.key]],env,scope)[0];
+		stream=fn.call(visitor,[['get',this.key]],env,scope)[0];
 	} else {
 		let component=scope.component || scope._component;
 		stream=createStreamBinding(component,this.key);					
@@ -94,8 +94,9 @@ function MutBinding(key) {
 MutBinding.prototype=new ComponentBinding();
 MutBinding.prototype.bind=function(morph,env,scope,visitor) {
 	var stream;
+	let fn= visitor.acceptParams || htmlBarsAcceptParams;
 	if(visitor) {
-		stream=htmlBarsAcceptParams([['subexpr','@mut',[['get',this.key]],[]]],env,scope)[0];
+		stream=fn.call(visitor,[['subexpr','@mut',[['get',this.key]],[]]],env,scope)[0];
 	} else {
 		let component=scope.component || scope._component;
 		stream=createStreamBinding(component,this.key);							

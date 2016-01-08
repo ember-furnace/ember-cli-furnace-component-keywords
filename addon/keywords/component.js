@@ -27,7 +27,7 @@ function componentKeyword(morph, env, scope, params, hash, template, inverse, vi
 		return;
 	}
 
-	env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);		
+	env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);
 	return true;
 }
 

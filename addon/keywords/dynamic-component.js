@@ -26,7 +26,7 @@ function readParam(env,scope,params,unboundParams,index) {
 		return env.hooks.getValue(params[index]);
 	}
 	if(unboundParams[index]!==undefined && unboundParams[index]!==null) {
-		let component=scope.component || scope._component;
+		let component=scope.component || scope._component || scope.parent._component;
 		return component.get(unboundParams[index].key);
 	}
 	return undefined;
@@ -133,7 +133,7 @@ DynamicKeyword.prototype.render = function(morph, env, scope, params, hash, temp
 		env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);		
 		return;
 	} else if(typeof componentPath==='function') {
-		componentPath.apply(componentPath,arguments);
+		componentPath.apply(componentPath,arguments);	
 		return;
 	} else if(componentPath.render) {
 		return componentPath.render.apply(componentPath,arguments);
@@ -150,13 +150,19 @@ DynamicKeyword.prototype.rerender = function(morph, env, scope, params, hash, te
 	}
 	var componentPath=state.componentPath;
 	if(typeof componentPath==='string') {
-		env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);		
+		env.hooks.component(morph, env, scope, componentPath, params, hash, { "default": template, inverse: inverse }, visitor);
+		if (morph.buildChildEnv) {
+	        return morph.buildChildEnv(morph.getState(), env);
+	    }
 		return;
 	} else if(typeof componentPath==='function') {
-		componentPath.apply(componentPath,arguments);		
+		componentPath.apply(componentPath,arguments);
+		if (morph.buildChildEnv) {
+	        return morph.buildChildEnv(morph.getState(), env);
+	    }
 		return;
 	} else if(componentPath.render) {
-		return componentPath.render.apply(componentPath,arguments);
+		return componentPath.rerender.apply(componentPath,arguments);
 	}
 };
 

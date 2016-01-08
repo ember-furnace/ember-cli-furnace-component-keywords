@@ -3,6 +3,12 @@ import CK from 'furnace-component-keywords';
 import Keyword from 'furnace-component-keywords/keywords/proto';
 import {RenderEnv} from 'furnace-component-keywords/private-api';
 import {mergeKeywords} from 'furnace-component-keywords/utils/env';
+import ComponentLookup from 'furnace-component-keywords/utils/component-lookup';
+
+var require = Ember.__loader.require;
+require('ember-views/component_lookup').default=ComponentLookup;
+
+
 export function initialize(app) {
 	Ember.Component.reopenClass({
 		keywords : function(keywords) {
@@ -21,7 +27,6 @@ export function initialize(app) {
 		}
 		return env;
 	}
-
 };
 
 export default {
