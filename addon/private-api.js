@@ -4,6 +4,7 @@ var require = Ember.__loader.require;
 var htmlBarsSubscribe=require('ember-htmlbars/utils/subscribe').default;
 var htmlBarsLinkParams=require('htmlbars-util/morph-utils').linkParams;
 var RenderEnv=require('ember-htmlbars/system/render-env').default;
+var Keywords=require('ember-htmlbars/keywords').default;
 var BasicStream = require('ember-metal/streams/stream').Stream || require('ember-metal/streams/stream').default;
 var isStream = require('ember-metal/streams/utils').isStream;
 var HtmlBarsComponentKeyword = require('ember-htmlbars/keywords/component').default;
@@ -17,6 +18,7 @@ export {
 	htmlBarsSubscribe,
 	htmlBarsLinkParams,
 	RenderEnv,
+	Keywords,
 	BasicStream,
 	isStream,
 	HtmlBarsComponentKeyword,

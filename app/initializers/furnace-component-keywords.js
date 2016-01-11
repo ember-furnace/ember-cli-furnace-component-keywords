@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import CK from 'furnace-component-keywords';
 import Keyword from 'furnace-component-keywords/keywords/proto';
-import {RenderEnv} from 'furnace-component-keywords/private-api';
+import {RenderEnv,Keywords} from 'furnace-component-keywords/private-api';
 import {mergeKeywords} from 'furnace-component-keywords/utils/env';
 import ComponentLookup from 'furnace-component-keywords/utils/component-lookup';
 
@@ -27,6 +27,15 @@ export function initialize(app) {
 		}
 		return env;
 	}
+	var orgOutletChildEnv=Keywords.outlet.childEnv;
+	Keywords.outlet.childEnv=function furnaceOutletChildEnv(state,env) {
+		var env = orgOutletChildEnv.apply(this,arguments);		
+		if(state.manager && state.manager.component && state.manager.component._hasFurnaceComponentKeywords) {
+			mergeKeywords(env,state.manager.component.keywords);
+		}
+		return env;
+	}
+	
 };
 
 export default {
