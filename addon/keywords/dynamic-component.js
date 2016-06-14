@@ -1,6 +1,4 @@
 import Keyword from 'furnace-component-keywords/keywords/proto';
-import ComponentKeyword from 'furnace-component-keywords/keywords/component';
-import {componentKeyword} from 'furnace-component-keywords/keywords/component';
 import {updateBinding} from 'furnace-component-keywords/utils/binding';
 import {assign} from 'furnace-component-keywords/private-api';
 
@@ -32,40 +30,6 @@ function readParam(env,scope,params,unboundParams,index) {
 	return undefined;
 }
 
-function getComponent(fn,env,scope,params,hash,unboundParams,unboundHash) {
-	var _params=[];
-	var _hash={};
-	for(let i=0;i<params.length;i++) {
-		_params[i]=env.hooks.getValue(params[i]);
-	}
-	if(unboundParams!==undefined) {
-		for (let i in unboundParams) {
-			if(_params[i]===undefined && unboundParams[i]) {
-				_params[i]=scope.component.get(unboundParams[i].key);
-			}
-		}
-	}
-
-	for(let i in hash) {
-		_hash[i]=env.hooks.getValue(hash[i]);
-	}
-	
-	if(unboundHash!==null) {
-		let updates = Object.keys(unboundHash);			
-		for (let i = 0, l = updates.length; i < l; i++) {
-			let key = updates[i];
-			if(_hash[key]===undefined && unboundHash[key]) {
-				if(scope.locals[unboundHash[key].key]!==undefined) { 
-					_hash[key]=env.hooks.getValue(scope.locals[unboundHash[key].key]);
-				} else {
-					_hash[key]=scope.component.get(unboundHash[key].key);
-				}
-			}
-		}
-	}
-	
-	return fn.call(CK,_hash,_params);
-}
 
 function DynamicKeywordProto() {
 	

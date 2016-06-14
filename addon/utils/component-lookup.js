@@ -3,10 +3,11 @@ import ClassComponent from 'furnace-component-keywords/utils/class-component';
 import CustomLookup from 'furnace-component-keywords/utils/custom-lookup';
 export default ComponentLookup.extend({
 	componentFor: function (name, container) {
+		var fullName;
 		if(name instanceof ClassComponent) {
 			return name.componentClass;
 		} else if(name instanceof CustomLookup) {
-			var fullName = name.type + ':' + name.name;
+			fullName = name.type + ':' + name.name;
 		    return container.lookupFactory(fullName);
 		} else if(name.indexOf(':')>-1) {
 			var factory= container.lookupFactory(name);
@@ -16,15 +17,16 @@ export default ComponentLookup.extend({
 			}
 			return factory;
 		} else { // TODO: This should be optional
-			var fullName = 'component:' + name;
+			fullName = 'component:' + name;
 		    return container.lookupFactory(fullName);
 		}		
 		//return this._super(name,container);
     },
     layoutFor: function (name, container) {
+    	var templateFullName;
     	if(name instanceof ClassComponent) {
     		if(name.layoutName) {
-    			var templateFullName = 'template:' + name.layoutName;
+    			templateFullName = 'template:' + name.layoutName;
     		    return container.lookup(templateFullName);
     		} else {
     			return null;
@@ -37,7 +39,7 @@ export default ComponentLookup.extend({
 			name=name.substring(name.indexOf(':')+1);
 			return container.lookup('template:'+type+name);
 		} else { // TODO: This should be optional
-			var templateFullName = 'template:components/' + name;
+			templateFullName = 'template:components/' + name;
 			return container.lookup(templateFullName);
 		}
 		//return this._super(name,container);
