@@ -8,9 +8,9 @@ export default ComponentLookup.extend({
 			return name.componentClass;
 		} else if(name instanceof CustomLookup) {
 			fullName = name.type + ':' + name.name;
-		    return container.lookupFactory(fullName);
+		    return container._lookupFactory(fullName);
 		} else if(name.indexOf(':')>-1) {
-			var factory= container.lookupFactory(name);
+			var factory= container._lookupFactory(name);
 			if(factory && !factory.typeKey) {
 				name=name.substring(name.indexOf(':')+1);
 				factory.typeKey=name;
@@ -18,7 +18,7 @@ export default ComponentLookup.extend({
 			return factory;
 		} else { // TODO: This should be optional
 			fullName = 'component:' + name;
-		    return container.lookupFactory(fullName);
+		    return container._lookupFactory(fullName);
 		}		
 		//return this._super(name,container);
     },
