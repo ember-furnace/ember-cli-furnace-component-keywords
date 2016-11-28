@@ -1,12 +1,19 @@
 import Ember from 'ember'; 
 var require = Ember.__loader.require;
 
+var streamPackage='ember-metal';
+
+if(Ember.VERSION.split('.')[1]>6) {
+	streamPackage='ember-htmlbars';
+} 
+
+
 var htmlBarsSubscribe=require('ember-htmlbars/utils/subscribe').default;
 var htmlBarsLinkParams=require('htmlbars-util/morph-utils').linkParams;
 var RenderEnv=require('ember-htmlbars/system/render-env').default;
 var Keywords=require('ember-htmlbars/keywords').default;
-var BasicStream = require('ember-metal/streams/stream').Stream || require('ember-metal/streams/stream').default;
-var isStream = require('ember-metal/streams/utils').isStream;
+var BasicStream = require(streamPackage+'/streams/stream').Stream || require('ember-metal/streams/stream').default;
+var isStream = require(streamPackage+'/streams/utils').isStream;
 var HtmlBarsComponentKeyword = require('ember-htmlbars/keywords/component').default;
 var assign = require('ember-metal/merge').assign || require('ember-metal/assign').default;
 var merge = require('ember-metal/merge').default;
