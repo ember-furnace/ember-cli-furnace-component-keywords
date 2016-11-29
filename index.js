@@ -3,7 +3,4 @@
 
 module.exports = {
   name: 'furnace-component-keywords',
-  isDevelopingAddon: function() {
-	  return true;
-  }
 };
